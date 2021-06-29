@@ -10,7 +10,7 @@ module.exports = class Bush extends Sprite {
 
 	onCollisionEnter(other, response) {}
 
-	onCollisionStay() {}
+	onCollisionStay(other, response) {}
 
-	onCollisionExit() {}
+	onCollisionExit(other) {}
 };

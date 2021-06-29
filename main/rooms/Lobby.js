@@ -1,6 +1,7 @@
 const Room = require('./Room');
 const Sprite = require('../sprites');
 const World = require('../worlds');
+const {Rectangle} = require('../helpers/Quadtree');
 
 module.exports = class Lobby extends Room {
 	constructor(options) {
@@ -46,6 +47,15 @@ module.exports = class Lobby extends Room {
 			if (moving.right === false) player.moving.right = false;
 		});
 
+		this.onMessage('shoot', (socket, event = []) => {
+			const player = socket.data.player;
+			if (!player) return;
+			const [isPressing, angle] = event;
+			if (isPressing === true) player.shoot(angle);
+
+			if (isPressing === false) player.stopShoot(angle);
+		});
+
 		this.onMessage('rotate', (socket, angle = 0) => {
 			const player = socket.data.player;
 			if (!player) return;
@@ -65,8 +75,12 @@ module.exports = class Lobby extends Room {
 	}
 
 	async onLeave(socket, consented) {
-		if (!consented) return this.world.remove(socket.data.player);
-		if (socket.data.currentLobby != 'lobby' + socket.id) {
+		if (!consented && socket.data.player instanceof Sprite.Sprite)
+			return this.world.remove(socket.data.player);
+		if (
+			socket.data.currentLobby &&
+			socket.data.currentLobby != 'lobby' + socket.id
+		) {
 			this.remove({id: socket.id});
 			await this.rooms['lobby' + socket.id].requestJoin(socket);
 		} else {
@@ -79,8 +93,52 @@ module.exports = class Lobby extends Room {
 		this.updateInterval = setInterval(() => {
 			const gunners = this.world.getSpritesByTag('Gunner');
 			for (let i = 0; i < gunners.length; i++) {
-				gunners[i].emit('world', this.world.data());
+				const widthQ =
+					SERVER_CONFIG.RESOLUTION.WIDTH +
+					this.world.QTManager.lrgstRange * 2 +
+					50;
+				const heightQ =
+					SERVER_CONFIG.RESOLUTION.HEIGHT +
+					this.world.QTManager.lrgstRange * 2 +
+					50;
+				const data = this.world.QTManager.quadtree
+					.query(
+						new Rectangle(
+							gunners[i].pos.x - widthQ / 2,
+							gunners[i].pos.y - heightQ / 2,
+							widthQ,
+							heightQ
+						)
+					)
+					.map(p => p.userData.getMetadata());
+				gunners[i].emit('world', data);
+				// console.log(roughSizeOfObject(data));
 			}
-		}, 1000 / GAME_CONFIG.TICKRATE);
+		}, 1000 / 20);
 	}
 };
+
+function roughSizeOfObject(object) {
+	var objectList = [];
+	var stack = [object];
+	var bytes = 0;
+
+	while (stack.length) {
+		var value = stack.pop();
+
+		if (typeof value === 'boolean') {
+			bytes += 4;
+		} else if (typeof value === 'string') {
+			bytes += value.length * 2;
+		} else if (typeof value === 'number') {
+			bytes += 8;
+		} else if (typeof value === 'object' && objectList.indexOf(value) === -1) {
+			objectList.push(value);
+
+			for (var i in value) {
+				stack.push(value[i]);
+			}
+		}
+	}
+	return bytes;
+}

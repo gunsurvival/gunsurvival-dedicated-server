@@ -2,10 +2,22 @@ import Manager from "./helpers/Manager.js";
 import {loadAssets} from "./globals/asset.global.js";
 
 const p5_functions = [
+	"mouseClicked",
+	"mousePressed",
+	"mouseReleased",
+	"mouseMoved",
+	"mouseDragged",
+	"doubleClicked",
+	"mouseWheel",
 	"keyPressed",
 	"keyReleased",
-	"mousePressed",
-	"mouseReleased"
+	"keyTyped",
+	"touchStarted",
+	"touchMoved",
+	"touchEnded",
+	"deviceMoved",
+	"deviceTurned",
+	"deviceShaken"
 ];
 
 export default class Renderer extends Manager {
@@ -25,6 +37,31 @@ export default class Renderer extends Manager {
 	}
 
 	inject(sketch) {
+		const getFitSize = () => {
+			let width, height;
+			const diff1 = window.innerWidth - SERVER_CONFIG.RESOLUTION.WIDTH;
+			const diff2 = window.innerHeight - SERVER_CONFIG.RESOLUTION.HEIGHT;
+			if (diff1 < diff2) {
+				width = window.innerWidth;
+				height =
+					SERVER_CONFIG.RESOLUTION.HEIGHT *
+					(width / SERVER_CONFIG.RESOLUTION.WIDTH);
+			} else {
+				height = window.innerHeight;
+				width =
+					SERVER_CONFIG.RESOLUTION.WIDTH *
+					(height / SERVER_CONFIG.RESOLUTION.HEIGHT);
+			}
+			return {width, height};
+		};
+
+		sketch.windowResized = () => {
+			const resolution = getFitSize();
+			const cur = this.items[this.currentIndex];
+			sketch.resizeCanvas(resolution.width, resolution.height);
+			cur.camera.scaleTo(sketch.width / SERVER_CONFIG.RESOLUTION.WIDTH);
+		};
+
 		sketch.preload = () => {
 			// Sweetalert2.fire({
 			// 	title: "bruh",
@@ -37,7 +74,11 @@ export default class Renderer extends Manager {
 		};
 
 		sketch.setup = () => {
-			sketch.createCanvas(window.innerWidth, window.innerHeight);
+			const resolution = getFitSize();
+			const canv = sketch.createCanvas(resolution.width, resolution.height);
+			const cur = this.items[this.currentIndex];
+			cur.camera.scaleTo(sketch.width / SERVER_CONFIG.RESOLUTION.WIDTH);
+			canv.parent("game-wrap");
 			sketch.imageMode(sketch.CENTER);
 		};
 
@@ -64,9 +105,9 @@ export default class Renderer extends Manager {
 		}, 1000);
 
 		for (const func_name of p5_functions) {
-			sketch[func_name] = () => {
+			sketch[func_name] = (...args) => {
 				this.items[this.currentIndex][func_name] &&
-					this.items[this.currentIndex][func_name](sketch);
+					this.items[this.currentIndex][func_name](sketch, ...args);
 			};
 		}
 	}

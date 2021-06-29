@@ -1,5 +1,11 @@
 const imageDir = "images/";
-const imagePaths = ["Gunner.png", "Bush.png", "Rock.png"];
+const imagePaths = [
+	"Gunner.png",
+	"Bush.png",
+	"Rock.png",
+	"Bullet.png",
+	"terrorist.png"
+];
 
 const GlobalAssets = {
 	cursor: {

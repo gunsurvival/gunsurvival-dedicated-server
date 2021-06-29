@@ -25,6 +25,8 @@ import * as World from "./worlds/index.js";
 			break;
 	}
 
+	ip = "123.31.193.123:3000";
+
 	Sweetalert2.fire({
 		title: `Hệ thống đang kết nối tới server ${serverQuery}`,
 		text: "Vui lòng chờ . . .",
@@ -35,7 +37,9 @@ import * as World from "./worlds/index.js";
 	});
 
 	$(document).ready(() => {
-		const socket = io(ip); // connect to server
+		const socket = io(ip, {
+			reconnection: false
+		}); // connect to server
 
 		socket.on("connect", () => {
 			// Sweetalert2.fire({
@@ -48,9 +52,9 @@ import * as World from "./worlds/index.js";
 			socket.emit("lobby-join");
 		});
 
-		socket.on("lobby-join", () => {
-			console.log(socket.id);
+		socket.on("lobby-join", SERVER_CONFIG => {
 			Sweetalert2.close();
+			window.SERVER_CONFIG = SERVER_CONFIG;
 			new p5(function(sketch) {
 				const renderer = new Renderer();
 				renderer.inject(sketch);

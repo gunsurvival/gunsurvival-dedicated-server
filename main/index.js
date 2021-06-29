@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/public'));
 
 initLogger();
 
-global.GAME_CONFIG = require('./configs/gameConfig');
+global.SERVER_CONFIG = require('./configs/SERVER_CONFIG');
 const gameServer = new GameServer(io);
 
 let lastTPS = 0;

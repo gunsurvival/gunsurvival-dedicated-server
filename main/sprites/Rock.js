@@ -10,7 +10,7 @@ module.exports = class Rock extends Sprite {
 
 	onCollisionEnter(other, response) {}
 
-	onCollisionStay() {}
+	onCollisionStay(other, response) {}
 
-	onCollisionExit() {}
+	onCollisionExit(other) {}
 };

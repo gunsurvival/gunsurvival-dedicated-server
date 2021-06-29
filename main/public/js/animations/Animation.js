@@ -4,7 +4,7 @@ export default class Animation {
 		id, //***
 		name = "Unknown Animation",
 		liveTime = 0,
-		infinite = true,
+		infinite = false,
 		visible = true,
 		// vị trí
 		pos = {x: 0, y: 0},
@@ -42,7 +42,7 @@ export default class Animation {
 		this.smoothRotate = smoothRotate; // làm mượt độ biến thiên giá trị của this.angle
 		this.speedRotate = speedRotate; // tốc độ làm mượt (càng nhỏ càng chậm)
 
-		this.deleted = false; // deleted = true thì auto bị bay ra khỏi hàng chờ vẽ animation
+		this.removed = false; // removed = true thì auto bị bay ra khỏi hàng chờ vẽ animation
 		this.frameCount = 0; // đếm frameCount
 	}
 
@@ -52,7 +52,7 @@ export default class Animation {
 		if (!this.infinite) {
 			// nếu không bất tử thì sẽ tính thời gian sống
 			this.liveTime--;
-			if (this.liveTime <= 0) this.deleted = true;
+			if (this.liveTime <= 0) this.destroy();
 		}
 
 		// cập nhật this.pos
@@ -78,7 +78,7 @@ export default class Animation {
 	}
 
 	destroy() {
-		this.deleted = true;
+		this.removed = true;
 	}
 
 	reBorn() {

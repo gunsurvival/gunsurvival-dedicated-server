@@ -45,6 +45,30 @@ export default class Lobby extends World {
 		}
 	}
 
+	mousePressed(sketch, event) {
+		switch (event.button) {
+			case 0:
+				const screenPos = this.camera.worldToScreen(sketch, this.me.pos);
+				this.socket.emit("shoot", [
+					true,
+					Math.atan2(sketch.mouseY - screenPos.y, sketch.mouseX - screenPos.x)
+				]);
+				break;
+		}
+	}
+
+	mouseReleased(sketch, event) {
+		switch (event.button) {
+			case 0:
+				const screenPos = this.camera.worldToScreen(sketch, this.me.pos);
+				this.socket.emit("shoot", [
+					false,
+					Math.atan2(sketch.mouseY - screenPos.y, sketch.mouseX - screenPos.x)
+				]);
+				break;
+		}
+	}
+
 	async onJoin(socketID) {}
 
 	async onLeave(socketID) {

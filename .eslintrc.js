@@ -15,6 +15,6 @@ module.exports = {
 		semi: ['error', 'always']
 	},
 	globals: {
-		GAME_CONFIG: 'readable'
+		SERVER_CONFIG: 'readable'
 	}
 };

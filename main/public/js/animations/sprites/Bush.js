@@ -18,6 +18,7 @@ export default class Bush extends Sprite {
 
 	update(sketch) {
 		super.update(sketch);
+		sketch.translate(this.pos.x, this.pos.y);
 		if (this.hideAmount < 0) this.hideAmount = 0;
 		if (this.hideAmount > 0) {
 			if (this.toggleShake == -1) this.rotateTo(this.targetAngle - 1);

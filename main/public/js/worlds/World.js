@@ -42,6 +42,7 @@ export default class World extends Manager {
 						sprite.onCreate();
 						if (sprite.id == this.socket.id) {
 							this.onSelfJoin(sprite, it);
+							this.me = sprite;
 						}
 					}
 					sprite.onUpdate(it);
@@ -91,6 +92,10 @@ export default class World extends Manager {
 	update(sketch) {
 		sketch.background("#133a2b");
 		for (let i = 0; i < this.items.length; i++) {
+			if (this.items[i].removed) {
+				this.items.splice(i--, 1);
+				continue;
+			}
 			sketch.push();
 			this.camera.update(sketch, this.items[i]);
 			sketch.pop();

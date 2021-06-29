@@ -16,7 +16,6 @@ export default class Camera extends Animation {
 
 	update(sketch, animation) {
 		super.update(sketch);
-		this.scaleTo(0.8);
 		sketch.translate(-this.pos.x * this.scale, -this.pos.y * this.scale);
 		sketch.rotate(this.rotate);
 		sketch.translate(sketch.width * 0.5, sketch.height * 0.5);
@@ -35,7 +34,7 @@ export default class Camera extends Animation {
 			third && // r1 top edge past r2 bottom
 			forth // r1 bottom edge past r2 top
 		) {
-			sketch.translate(animation.pos.x, animation.pos.y);
+			sketch.smooth();
 			animation.update(sketch);
 		}
 	}

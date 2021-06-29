@@ -26,7 +26,7 @@ export default class Player extends Sprite {
 					sketch.mouseX - sketch.width / 2
 				)
 			);
-
+		sketch.translate(this.pos.x, this.pos.y);
 		sketch.textAlign(sketch.CENTER, sketch.CENTER);
 		sketch.textSize(18); // draw name
 		sketch.stroke("white");
@@ -34,18 +34,13 @@ export default class Player extends Sprite {
 		sketch.fill("white");
 		sketch.text(this.name, 0, -60);
 
-		const img = images["Gunner.png"];
+		const img = images["terrorist.png"];
 		sketch.rotate(this.angle);
-		sketch.image(img, 0, 0);
+		sketch.image(img, 0, 0, 80, 80);
 	}
 
 	onUpdate({angle, pos, tick} = {}) {
 		// debugger;
-		if (this.frameCount - tick > 10) {
-			console.log("server: " + tick);
-			console.log("client: " + this.frameCount);
-			return;
-		}
 		this.frameCount = tick;
 		!this.isMaster && this.rotateTo(angle);
 		this.moveTo(pos);

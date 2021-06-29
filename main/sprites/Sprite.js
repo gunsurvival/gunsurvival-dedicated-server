@@ -7,6 +7,8 @@ module.exports = class Sprite {
 		id = uniqid(),
 		tag = this.constructor.name,
 		pos = {x: 0, y: 0},
+		vel = {x: 0, y: 0},
+		friction = 0.9,
 		angle = 0,
 		rigidBody,
 		QTRange = 0
@@ -15,6 +17,8 @@ module.exports = class Sprite {
 		this.id = id;
 		this.tag = tag;
 		this.pos = new SAT.Vector(pos.x, pos.y);
+		this.vel = new SAT.Vector(vel.x, vel.y);
+		this.friction = friction;
 		this.angle = angle;
 		this.rigidBody = rigidBody;
 		this.QTRange = QTRange;
@@ -27,7 +31,11 @@ module.exports = class Sprite {
 		this.world.room.gameServer.io.to(this.id).emit(eventName, ...args);
 	}
 
-	update() {}
+	update() {
+		this.pos.add(this.vel);
+		// this.vel.x -= 2 * (32 / this.world.room.gameServer.tps);
+		// this.vel.y -= 2 * (32 / this.world.room.gameServer.tps);
+	}
 
 	getMetadata() {
 		return {
@@ -40,7 +48,7 @@ module.exports = class Sprite {
 	}
 
 	destroy() {
-		this.deleted = true;
+		this.removed = true;
 	}
 
 	onCollisionEnter(other, response) {}

@@ -4,7 +4,7 @@ const Sprite = require('./Sprite');
 module.exports = class Player extends Sprite {
 	constructor(options) {
 		super(options);
-		const {speed = 6} = options;
+		const {speed = 7} = options;
 		this.baseSpeed = speed;
 		this.speed = speed;
 		this.moving = {
@@ -13,9 +13,15 @@ module.exports = class Player extends Sprite {
 			left: false,
 			right: false
 		};
+		this.mouse = {
+			left: false,
+			right: false,
+			middle: false
+		};
 	}
 
 	update() {
+		super.update();
 		this.pos.add(this.getSpeedV());
 	}
 

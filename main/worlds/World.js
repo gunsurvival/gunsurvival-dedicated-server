@@ -53,6 +53,11 @@ module.exports = class World {
 		for (let i = 0; i < this.sprites.length; i++) {
 			for (let j = 0; j < this.sprites[i].length; j++) {
 				const sprite = this.sprites[i][j];
+				if (sprite.removed) {
+					this.sprites[i].splice(j, 1);
+					j--;
+					continue;
+				}
 				sprite.update();
 				sprite.tick++;
 				this.QTManager.insert(sprite);
@@ -106,10 +111,13 @@ module.exports = class World {
 				const [other, response] = collisions[j];
 				if (!this.executedOCE[sprite.id + other.id]) {
 					sprite.onCollisionEnter(other, response);
+					this.room.emit('collision-enter', {
+						id: other.id,
+						response
+					});
 					this.executedOCE[sprite.id + other.id] = [sprite, other];
-				} else {
-					sprite.onCollisionStay(other, response);
 				}
+				sprite.onCollisionStay(other, response);
 			}
 		}
 	}
