@@ -36,7 +36,7 @@ module.exports = class GameServer {
 
 				try {
 					await myLobby.requestJoin(socket);
-					socket.emit('lobby-join');
+					socket.emit('lobby-join', SERVER_CONFIG);
 				} catch (e) {
 					socket.emit('error', 'Lỗi!');
 					console.newLogger.error(e.stack);
@@ -60,12 +60,16 @@ module.exports = class GameServer {
 
 		this.simulateInterval = setInterval(() => {
 			const timeNow = Date.now();
-			for (let id in this.rooms) {
-				this.rooms[id].world.nextTick();
-				this.rooms[id].performance = Date.now() - timeNow;
+			try {
+				for (let id in this.rooms) {
+					this.rooms[id].world.nextTick();
+					this.rooms[id].performance = Date.now() - timeNow;
+				}
+			} catch (e) {
+				console.log(e);
 			}
 			tick++;
-		});
+		}, 1000 / 128);
 
 		this.balanceTPSInterval = setInterval(() => {
 			const div = Math.abs(tick - this.tps);
