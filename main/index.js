@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const {Server} = require('socket.io');
 const app = express();
-const httpServer = app.listen(3000);
+const httpServer = app.listen(process.env.PORT, () => console.log('Server started on :*' + process.env.PORT));
 const io = new Server(httpServer);
 const {initLogger, setTerminalTitle} = require('./helpers/console');
 const GameServer = require('./GameServer');

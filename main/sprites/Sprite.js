@@ -33,8 +33,12 @@ module.exports = class Sprite {
 
 	update() {
 		this.pos.add(this.vel);
-		// this.vel.x -= 2 * (32 / this.world.room.gameServer.tps);
-		// this.vel.y -= 2 * (32 / this.world.room.gameServer.tps);
+		this.vel.scale(0.99);
+		// if (this.vel.len() < ) {
+		// 	this.destroy();
+		// 	// this.vel.x -= 2 * (32 / this.world.room.gameServer.tps);
+		// 	// this.vel.y -= 2 * (32 / this.world.room.gameServer.tps);
+		// }
 	}
 
 	getMetadata() {

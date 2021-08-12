@@ -54,6 +54,8 @@ module.exports = class GameServer {
 					}
 				});
 			});
+
+			socket.on('_ping', timeSent => socket.emit('pong', Number(timeSent)));
 		});
 
 		let tick = 0;

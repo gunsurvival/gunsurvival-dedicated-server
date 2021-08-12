@@ -25,7 +25,7 @@ import * as World from "./worlds/index.js";
 			break;
 	}
 
-	ip = "123.31.193.123:3000";
+	// ip = "123.31.170.16:3000";
 
 	Sweetalert2.fire({
 		title: `Hệ thống đang kết nối tới server ${serverQuery}`,
@@ -50,6 +50,11 @@ import * as World from "./worlds/index.js";
 			// 	allowEscapeKey: false
 			// });
 			socket.emit("lobby-join");
+			socket.emit("_ping", Date.now());
+		});
+
+		socket.on("pong", timeSent => {
+			socket.emit("_ping", Date.now());
 		});
 
 		socket.on("lobby-join", SERVER_CONFIG => {

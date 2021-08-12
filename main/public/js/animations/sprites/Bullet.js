@@ -51,9 +51,18 @@ export default class Bullet extends Sprite {
 	}
 
 	getBoundary() {
+		// WIP boundary
+		const max = {x: this.pos.x, y: this.pos.y};
+		const min = {x: this.pos.x, y: this.pos.y};
+		for (const chain of this.chains) {
+			if (max.x < chain.x) max.x = chain.x;
+			if (max.y < chain.y) max.y = chain.y;
+			if (min.x > min.x) min.x = chain.x;
+			if (min.y > min.y) min.y = chain.y;
+		}
 		return {
-			width: images["Bullet.png"].width,
-			height: images["Bullet.png"].height
+			width: max.x - min.x,
+			height: max.y - min.y
 		};
 	}
 }

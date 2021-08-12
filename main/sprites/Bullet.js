@@ -17,18 +17,25 @@ module.exports = class Bullet extends Sprite {
 		case 'Rock':
 		case 'Tree':
 			this.pos.sub(response.overlapV);
-			this.vel.x = -response.overlapV.x * 10;
-			this.vel.y = -response.overlapV.y * 10;
+			this.vel.x -= response.overlapV.x;
+			this.vel.y -= response.overlapV.y;
 			break;
 		case 'Gunner':
 			if (other == this.owner) break;
 			this.pos.sub(response.overlapV);
-			this.vel.x = -response.overlapV.x * 10;
-			this.vel.y = -response.overlapV.y * 10;
+			this.vel.x -= response.overlapV.x * 5;
+			this.vel.y -= response.overlapV.y * 5;
 			// this.destroy();
 			break;
 		}
 	}
 
 	onCollisionExit(other) {}
+
+	update() {
+		super.update();
+		if (this.vel.len() < 1) {
+			this.destroy();
+		}
+	}
 };
